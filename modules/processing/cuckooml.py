@@ -939,7 +939,7 @@ class ML(object):
                 features = self.features
 
         hdbscan = HDBSCAN(min_samples=min_samples, \
-                          min_cluster_size=min_cluster_size)
+                          min_cluster_size=min_cluster_size, prediction_data=True)
         hdbscan_fit = hdbscan.fit(features)
         hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
                                          hdbscan_fit.probabilities_,
