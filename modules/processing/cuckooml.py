@@ -21,6 +21,7 @@ try:
     import pandas as pd
     import seaborn as sns
     from hdbscan import HDBSCAN
+    from hdbscan.prediction import approximate_predict
     from sklearn import metrics
     from sklearn.cluster import DBSCAN
     from sklearn.manifold import TSNE
@@ -946,7 +947,7 @@ class ML(object):
         hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
                                          hdbscan_fit.probabilities_,
                                          hdbscan_fit.outlier_scores_])
-        hdbscan_predictions = hdbscan.prediction.approximate_predict(hdbscan_fit, features)
+        hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
         # plt.plot(features, hdbscan_predictions, color='red',linewidth=3) 
 
         # TODO: Allow storing multiple clustering results based on parameters
