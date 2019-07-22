@@ -949,8 +949,8 @@ class ML(object):
         hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
                                          hdbscan_fit.probabilities_,
                                          hdbscan_fit.outlier_scores_])
-        hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
-        print(hdbscan_predictions)
+        # hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
+        # print(hdbscan_predictions)
 
         # TODO: Allow storing multiple clustering results based on parameters
         if dry:
@@ -1190,10 +1190,10 @@ class ML(object):
         #     print "Test data is not specified"
         #     return
         
-        hdbscan = HDBSCAN(prediction_data=True)
-        test_labels, strengths = hdbscan.approximate_predict(self.clustering["hdbscan"], self.features)
-        test_labels
-
+        # hdbscan = HDBSCAN(prediction_data=True)
+        # test_labels, strengths = hdbscan.approximate_predict(self.clustering["hdbscan"], self.features)
+        hdbscan_predictions = hdbscan.approximate_predict(self.clustering["hdbscan"], features)
+        print(hdbscan_predictions)
 
 
     # def cluster_knn(self, features=None, n_neighbors=5, ):
