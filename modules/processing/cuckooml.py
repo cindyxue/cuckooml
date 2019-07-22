@@ -1175,17 +1175,34 @@ class ML(object):
             return cluster_distribution
 
 
-    def cluster_knn(self, features=None, n_neighbors=5):
-        if features is None:
-            print "You didn't indicate features to be used. Internal features \
+    def cluster_classifier(self, clusterer="hdbscan", test_data=""):
+        if clusterer is None:
+            print "You didn't indicate clusterer to be used. Internal features \
                 will be used."
-            if self.features is None:
-                print "Internal features not available."
+            if self.clustering["hdbscan"] is None:
+                print "Default hdbscan clusterer is not available."
                 return
-            else:
-                features = self.features
+
+        if test_data is None:
+            print "Test data is not specified"
+            return
         
-        knn = KNeighborsClassifier(n_neighbors)
+        test_labels, strengths = hdbscan.approximate_predict(self.clustering["hdbscan"], test_data)
+        test_labels
+
+
+
+    # def cluster_knn(self, features=None, n_neighbors=5, ):
+    #     if features is None:
+    #         print "You didn't indicate features to be used. Internal features \
+    #             will be used."
+    #         if self.features is None:
+    #             print "Internal features not available."
+    #             return
+    #         else:
+    #             features = self.features
+        
+    #     knn = KNeighborsClassifier(n_neighbors)
 
 
 
