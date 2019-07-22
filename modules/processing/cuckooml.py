@@ -946,7 +946,7 @@ class ML(object):
         hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
                                          hdbscan_fit.probabilities_,
                                          hdbscan_fit.outlier_scores_])
-        # hdbscan_predictions = hdbscan.approximate_predict(hdbscan, features)
+        hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
         # plt.plot(features, hdbscan_predictions, color='red',linewidth=3) 
 
         # TODO: Allow storing multiple clustering results based on parameters
