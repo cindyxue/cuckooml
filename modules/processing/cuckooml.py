@@ -974,7 +974,7 @@ class ML(object):
                                           columns=["label", "probability",
                                                    "outlier_score"])
             }
-            print("self.clustering["hdbscan"]")
+            print("self.clustering[hdbscan]")
             print(self.clustering["hdbscan"])
 
 
