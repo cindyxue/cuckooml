@@ -974,8 +974,8 @@ class ML(object):
                                           columns=["label", "probability",
                                                    "outlier_score"])
             }
-            print("self.clustering[hdbscan]")
-            print(self.clustering["hdbscan"])
+            # print("self.clustering[hdbscan]")
+            # print(self.clustering["hdbscan"])
 
 
     def save_clustering_results(self, loader, save_location=""):
@@ -1180,8 +1180,7 @@ class ML(object):
             return cluster_distribution
 
 
-    def cluster_hdbscan_classifer(self, features=None, min_samples=1, \
-                        min_cluster_size=6, dry=False):
+    def cluster_hdbscan_classifer(self, features=None):
         """Do *hdbscan* clustering and return """
         if features is None:
             print "You didn't indicate features to be used. Internal features \
@@ -1192,51 +1191,13 @@ class ML(object):
             else:
                 features = self.features
 
-        hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
-                          min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
-        hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
-                                         hdbscan_fit.probabilities_,
-                                         hdbscan_fit.outlier_scores_])
-        hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
+        # hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
+        #                   min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
+        # hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
+        #                                  hdbscan_fit.probabilities_,
+        #                                  hdbscan_fit.outlier_scores_])
+        hdbscan_predictions = hdbscan.approximate_predict(self.clustering["hdbscan"], features)
         print(hdbscan_predictions)
-
-        # TODO: Allow storing multiple clustering results based on parameters
-        if dry:
-            return {
-                "min_samples":min_samples,
-                "min_cluster_size":min_cluster_size,
-                "clustering":pd.DataFrame(hdbscan_stats, index=features.index,
-                                          columns=["label", "probability",
-                                                   "outlier_score"])
-            }
-        else:
-            # if "hdbscan" not in self.clustering:
-                # self.clustering["hdbscan"] = {}
-            # clustering_hash = "min_samples:%s&min_cluster_size:%d" % \
-                # (min_samples, min_cluster_size)
-            # self.clustering["hdbscan"][clustering_hash] = {
-            self.clustering["hdbscan"] = {
-                "min_samples":min_samples,
-                "min_cluster_size":min_cluster_size,
-                "clustering":pd.DataFrame(hdbscan_stats, index=features.index,
-                                          columns=["label", "probability",
-                                                   "outlier_score"])
-            }
-            print("self.clustering[hdbscan]")
-            print(self.clustering["hdbscan"])
-
-
-    # def cluster_knn(self, features=None, n_neighbors=5, ):
-    #     if features is None:
-    #         print "You didn't indicate features to be used. Internal features \
-    #             will be used."
-    #         if self.features is None:
-    #             print "Internal features not available."
-    #             return
-    #         else:
-    #             features = self.features
-        
-    #     knn = KNeighborsClassifier(n_neighbors)
 
 
 
