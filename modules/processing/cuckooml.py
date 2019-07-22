@@ -949,8 +949,6 @@ class ML(object):
         hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
                                          hdbscan_fit.probabilities_,
                                          hdbscan_fit.outlier_scores_])
-        # hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
-        # print(hdbscan_predictions)
 
         # TODO: Allow storing multiple clustering results based on parameters
         if dry:
@@ -1180,23 +1178,26 @@ class ML(object):
             return cluster_distribution
 
 
-    def cluster_hdbscan_classifer(self, features=None, min_samples=1, \
+    def cluster_hdbscan_classifer(self, featuresLabel=None, featuresPredict=None, min_samples=1, \
                         min_cluster_size=6, dry=False):
         """Do *hdbscan* clustering and return """
-        if features is None:
+        if featuresLabel is None:
             print "You didn't indicate features to be used. Internal features \
                 will be used."
-            if self.features is None:
+            if self.featuresLabel is None:
                 print "Internal features not available."
                 return
             else:
-                features = self.features
+                featuresLabel = self.features
+
+        if featuresPredict is None:
+            print "No features are specified to predict"
+            return
 
         hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
-                          min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
-        hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
+                          min_cluster_size=min_cluster_size, prediction_data=True).fit(featuresLabel)
+        hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, featuresPredict)
         print(hdbscan_predictions)
-
 
 
 class Loader(object):
