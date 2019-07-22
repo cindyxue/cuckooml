@@ -1194,10 +1194,17 @@ class ML(object):
 
         hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
                           min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
-        # hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
-        #                                  hdbscan_fit.probabilities_,
-        #                                  hdbscan_fit.outlier_scores_])
-        hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
+        hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
+                                         hdbscan_fit.probabilities_,
+                                         hdbscan_fit.outlier_scores_])
+        self.clustering["hdbscan"] = {
+            "min_samples":min_samples,
+            "min_cluster_size":min_cluster_size,
+            "clustering":pd.DataFrame(hdbscan_stats, index=features.index,
+                                        columns=["label", "probability",
+                                                "outlier_score"])
+        }
+        hdbscan_predictions = hdbscan.approximate_predict(self.clustering["hdbscan"], features)
         print(hdbscan_predictions)
 
         # TODO: Allow storing multiple clustering results based on parameters
