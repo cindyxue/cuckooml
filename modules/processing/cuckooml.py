@@ -974,6 +974,8 @@ class ML(object):
                                           columns=["label", "probability",
                                                    "outlier_score"])
             }
+            print("self.clustering["hdbscan"]")
+            print(self.clustering["hdbscan"])
 
 
     def save_clustering_results(self, loader, save_location=""):
