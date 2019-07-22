@@ -1183,9 +1183,9 @@ class ML(object):
                 print "Default hdbscan clusterer is not available."
                 return
 
-        if test_data is None:
-            print "Test data is not specified"
-            return
+        # if test_data is None:
+        #     print "Test data is not specified"
+        #     return
         
         test_labels, strengths = hdbscan.approximate_predict(self.clustering["hdbscan"], self.features)
         test_labels
