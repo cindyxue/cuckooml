@@ -21,7 +21,7 @@ try:
     import pandas as pd
     import seaborn as sns
     from hdbscan import HDBSCAN
-    from hdbscan.prediction import approximate_predict
+    from hdbscan import RobustSingleLinkage
     from sklearn import metrics
     from sklearn.cluster import DBSCAN
     from sklearn.manifold import TSNE
