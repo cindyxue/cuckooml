@@ -24,6 +24,8 @@ try:
     from sklearn import metrics
     from sklearn.cluster import DBSCAN
     from sklearn.manifold import TSNE
+    from sklearn.neighbors import KNeighborsClassifier
+
 except ImportError, e:
     print >> sys.stderr, "Some of the packages required by CuckooML are not \
         available."
@@ -944,8 +946,8 @@ class ML(object):
         hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
                                          hdbscan_fit.probabilities_,
                                          hdbscan_fit.outlier_scores_])
-        hdbscan_predictions = hdbscan.approximate_predict(hdbscan, features)
-        plt.plot(features, hdbscan_predictions, color='red',linewidth=3) 
+        # hdbscan_predictions = hdbscan.approximate_predict(hdbscan, features)
+        # plt.plot(features, hdbscan_predictions, color='red',linewidth=3) 
 
         # TODO: Allow storing multiple clustering results based on parameters
         if dry:
@@ -1171,6 +1173,20 @@ class ML(object):
             cluster_distribution = pd.DataFrame(cluster_distribution).T
             cluster_distribution.index.name = "cluster_id"
             return cluster_distribution
+
+
+    def cluster_knn(self, features=None, n_neighbors=5):
+        if features is None:
+            print "You didn't indicate features to be used. Internal features \
+                will be used."
+            if self.features is None:
+                print "Internal features not available."
+                return
+            else:
+                features = self.features
+        
+        knn = KNeighborsClassifier(n_neighbors)
+
 
 
 class Loader(object):
