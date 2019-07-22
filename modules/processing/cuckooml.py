@@ -954,7 +954,7 @@ class ML(object):
             min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
         hdbscan_predictions = hdbscan.approximate_predict(clusterer, features)
 
-        plt.plot(features, hdbscan_predictions, color='red',linewidth=3) 
+        # plt.plot(features, hdbscan_predictions, color='red',linewidth=3) 
 
         # TODO: Allow storing multiple clustering results based on parameters
         # if dry:
