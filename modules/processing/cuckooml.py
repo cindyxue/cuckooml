@@ -1175,7 +1175,7 @@ class ML(object):
             return cluster_distribution
 
 
-    def cluster_classifier(self, clusterer="hdbscan", test_data=""):
+    def cluster_classifier(self, clusterer="hdbscan"):
         if clusterer is None:
             print "You didn't indicate clusterer to be used. Internal features \
                 will be used."
@@ -1187,7 +1187,7 @@ class ML(object):
             print "Test data is not specified"
             return
         
-        test_labels, strengths = hdbscan.approximate_predict(self.clustering["hdbscan"], test_data)
+        test_labels, strengths = hdbscan.approximate_predict(self.clustering["hdbscan"], self.features)
         test_labels
 
 
