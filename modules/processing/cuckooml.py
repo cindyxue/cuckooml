@@ -942,42 +942,43 @@ class ML(object):
             else:
                 features = self.features
 
-        # hdbscan = HDBSCAN(min_samples=min_samples, \
+        # hdbscan = hdbscan.HDBSCAN(min_samples=min_samples, \
         #                   min_cluster_size=min_cluster_size, prediction_data=True)
-        # hdbscan_fit = hdbscan.fit(features)
-        # hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
-        #                                  hdbscan_fit.probabilities_,
-        #                                  hdbscan_fit.outlier_scores_])
-        # hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
+        hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
+                          min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
+        hdbscan_stats = np.column_stack([hdbscan_fit.labels_,
+                                         hdbscan_fit.probabilities_,
+                                         hdbscan_fit.outlier_scores_])
+        hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, features)
 
-        clusterer = hdbscan.HDBSCAN(min_samples=min_samples, \
-            min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
-        hdbscan_predictions = hdbscan.approximate_predict(clusterer, features)
+        # clusterer = hdbscan.HDBSCAN(min_samples=min_samples, \
+        #     min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
+        # hdbscan_predictions = hdbscan.approximate_predict(clusterer, features)
 
         # plt.plot(features, hdbscan_predictions, color='red',linewidth=3) 
 
         # TODO: Allow storing multiple clustering results based on parameters
-        # if dry:
-        #     return {
-        #         "min_samples":min_samples,
-        #         "min_cluster_size":min_cluster_size,
-        #         "clustering":pd.DataFrame(hdbscan_stats, index=features.index,
-        #                                   columns=["label", "probability",
-        #                                            "outlier_score"])
-        #     }
-        # else:
-        #     # if "hdbscan" not in self.clustering:
-        #         # self.clustering["hdbscan"] = {}
-        #     # clustering_hash = "min_samples:%s&min_cluster_size:%d" % \
-        #         # (min_samples, min_cluster_size)
-        #     # self.clustering["hdbscan"][clustering_hash] = {
-        #     self.clustering["hdbscan"] = {
-        #         "min_samples":min_samples,
-        #         "min_cluster_size":min_cluster_size,
-        #         "clustering":pd.DataFrame(hdbscan_stats, index=features.index,
-        #                                   columns=["label", "probability",
-        #                                            "outlier_score"])
-        #     }
+        if dry:
+            return {
+                "min_samples":min_samples,
+                "min_cluster_size":min_cluster_size,
+                "clustering":pd.DataFrame(hdbscan_stats, index=features.index,
+                                          columns=["label", "probability",
+                                                   "outlier_score"])
+            }
+        else:
+            # if "hdbscan" not in self.clustering:
+                # self.clustering["hdbscan"] = {}
+            # clustering_hash = "min_samples:%s&min_cluster_size:%d" % \
+                # (min_samples, min_cluster_size)
+            # self.clustering["hdbscan"][clustering_hash] = {
+            self.clustering["hdbscan"] = {
+                "min_samples":min_samples,
+                "min_cluster_size":min_cluster_size,
+                "clustering":pd.DataFrame(hdbscan_stats, index=features.index,
+                                          columns=["label", "probability",
+                                                   "outlier_score"])
+            }
 
 
     def save_clustering_results(self, loader, save_location=""):
