@@ -1187,6 +1187,7 @@ class ML(object):
         #     print "Test data is not specified"
         #     return
         
+        hdbscan = HDBSCAN()
         test_labels, strengths = hdbscan.approximate_predict(self.clustering["hdbscan"], self.features)
         test_labels
 
