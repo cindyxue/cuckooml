@@ -1323,10 +1323,10 @@ class Instance(object):
         self.name = name
 
         # Get total and positives
-        self.total = self.report.get("virustotal").get("total")
-        self.positives = self.report.get("virustotal").get("positives")
-        # Pull all VT normalised results
-        self.scans = self.report.get("virustotal").get("scans")
+        # self.total = self.report.get("virustotal").get("total")
+        # self.positives = self.report.get("virustotal").get("positives")
+        # # Pull all VT normalised results
+        # self.scans = self.report.get("virustotal").get("scans")
 
 
     def label_sample(self, external_labels=None, label_type="family"):
