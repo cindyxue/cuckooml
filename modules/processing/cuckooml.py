@@ -20,8 +20,9 @@ try:
     import numpy as np
     import pandas as pd
     import seaborn as sns
-    from hdbscan import HDBSCAN
-    from hdbscan import RobustSingleLinkage
+    # from hdbscan import HDBSCAN
+    # from hdbscan import RobustSingleLinkage
+    import hdbscan
     from sklearn import metrics
     from sklearn.cluster import DBSCAN
     from sklearn.manifold import TSNE
