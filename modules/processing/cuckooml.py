@@ -20,13 +20,10 @@ try:
     import numpy as np
     import pandas as pd
     import seaborn as sns
-    # from hdbscan import HDBSCAN
-    # from hdbscan import RobustSingleLinkage
-    import hdbscan
-    from sklearn import metrics
-    from sklearn.cluster import DBSCAN
-    from sklearn.manifold import TSNE
-    from sklearn.neighbors import KNeighborsClassifier
+    import hdbscan      # DBSCAN with noises
+    from sklearn import metrics     # score
+    from sklearn.cluster import DBSCAN      # core, border, outlier
+    from sklearn.manifold import TSNE       # visualize high-dimensional data
 
 except ImportError, e:
     print >> sys.stderr, "Some of the packages required by CuckooML are not \
@@ -408,6 +405,7 @@ class ML(object):
         self.target_simple_features_description = {}
 
 
+    # Helper: return a logarithmic bin of given value.
     def __log_bin(self, value, base=3):
         """Return a logarithmic bin of given value. * """
         if value is None:
@@ -417,6 +415,7 @@ class ML(object):
         return int(log(value + base - 1, base))
 
 
+    # Helper: make a string all lower cases
     def __normalise_string(self, string):
         """Get lower case string representation. * """
         if string is None:
@@ -425,6 +424,8 @@ class ML(object):
         return string.lower()
 
 
+    # Helper: simplify a string
+    # Classified characters to nums, caps_c, caps_v, smal_c, smal_v
     def __simplify_string(self, string, distinguish_voyels=False):
         """Returns a simplified representation of the string where characters
         are mapped to their representatives. * """
@@ -453,6 +454,7 @@ class ML(object):
         return string
 
 
+    # N-grams are simply all combinations of adjacent words or letters of length n that you can find in your source text.
     def __n_grams(self, string, n=3, reorder=False):
         """Returns a *set* of n-grams. If the iterable is smaller than n, it is
         returned itself. * """
@@ -474,6 +476,7 @@ class ML(object):
         return ngrams
 
 
+    # Apply normalisation, simplification, n-gram to a string
     def __handle_string(self, string):
         """Apply normalisation, simplification and n-gram extraction to a
         string. If the string is missing (None) return empty list."""
@@ -488,21 +491,25 @@ class ML(object):
             return handled
 
 
+    # Mutator: extract all labels from dataframe
     def extract_labels(self, labels):
         """Extract labels into pandas data frame."""
         return pd.DataFrame(labels, index=["label"]).T
 
 
+    # Accessor: get all labels
     def load_labels(self, labels):
         """Load labels into pandas data frame."""
         self.labels = self.extract_labels(labels)
 
 
+    # Accessor: get all labels of target 
     def load_target_labels(self, target_labels):
         """Load labels of targets into pandas data frame."""
         self.target_labels = self.extract_labels(target_labels)
 
 
+    # Mutator: extract all simple features from dataframe
     def extract_simple_features(self, simple_features):
         """Extract simple features form an external object into pandas data
         frame."""
@@ -524,6 +531,7 @@ class ML(object):
         return simple_features, simple_features_description
 
 
+    # Accessor: get all simple features
     def load_simple_features(self, simple_features):
         """Load simple features form an external object into pandas data
         frame."""
@@ -531,6 +539,7 @@ class ML(object):
             self.extract_simple_features(simple_features)
 
 
+    # Mutator: extract all simple features of targets from dataframe
     def extract_target_simple_features(self, target_simple_features):
         """Extract simple features form the target object into pandas data
         frame."""
@@ -586,6 +595,7 @@ class ML(object):
         return target_simple_features, target_simple_features_description
 
 
+    # Accessor: get all simple features of targets
     def load_target_simple_features(self, target_simple_features):
         """Load simple features of targets form an external object into pandas data
         frame."""
@@ -593,6 +603,7 @@ class ML(object):
             self.extract_target_simple_features(target_simple_features)
 
 
+    # Export labels and simple features to a csv file
     def export_simple_dataset(self, filename="simple_dataset.csv"):
         """Export a dataset consisting of malware labels and *simple* features
         to CSV formatted file."""
@@ -620,6 +631,7 @@ class ML(object):
         return self.simple_features.loc[:, self.SIMPLE_CATEGORIES[category]]
 
 
+    # Mutator: extract all features from dataframe
     def extract_features(self, features, include_API_calls=False, \
                       include_API_calls_count=False):
         """Extract features form an external object into pandas data frame."""
@@ -776,6 +788,7 @@ class ML(object):
         return features_pd
 
 
+    # Accessor: get all features  
     def load_features(self, features, include_API_calls=False, \
                       include_API_calls_count=False):
         """Load features form an external object into pandas data frame."""
@@ -783,6 +796,10 @@ class ML(object):
                                               include_API_calls_count)
 
 
+    # TODO: extract target features
+
+
+    # Accessor: get all features of targets
     def load_target_features(self, target_features, include_API_calls=False, \
                       include_API_calls_count=False):
         """Load features form an external object into pandas data frame."""
@@ -790,6 +807,7 @@ class ML(object):
                                               include_API_calls_count)
 
 
+    # Export labels and all features to a csv file
     def export_dataset(self, filename="dataset.csv"):
         """Export a dataset consisting of malware labels and features to CSV
         formatted file."""
@@ -856,6 +874,7 @@ class ML(object):
         return self.features.loc[:, extract]
 
 
+    # Prune useless features; remove sparse features
     def filter_dataset(self, dataset=None, feature_coverage=0.1,
                        complement=False):
         """Prune features that are useless."""
@@ -878,6 +897,7 @@ class ML(object):
         return dataset
 
 
+    # Detect outliers and suspect_outliers
     def detect_abnormal_behaviour(self, count_dataset=None, figures=True):
         """Detect samples that behave significantly different than others."""
         if count_dataset is None:
@@ -929,6 +949,7 @@ class ML(object):
             return pd.DataFrame(ret).T
 
 
+    # Visualize labels using TSNE
     def visualise_data(self, data=None, labels=None, learning_rate=200,
                        fig_name="custom"):
         """Create t-Distributed Stochastic Neighbor Embedding for features and
@@ -954,6 +975,7 @@ class ML(object):
             plt.close()
 
 
+    # Export selected features and labels to a csv file
     def save_dataset(self, filename="custom_dataset.csv", features=None, \
                      labels=None):
         """Export a dataset to CSV formatted file."""
@@ -975,6 +997,7 @@ class ML(object):
         dataset.to_csv(filename, encoding='utf-8')
 
 
+    # Clustering features using DBSCAN
     def cluster_dbscan(self, features=None, eps=20.0, min_samples=5, dry=False):
         """Do *dbscan* clustering and return """
         if features is None:
@@ -1009,6 +1032,7 @@ class ML(object):
             }
 
 
+    # Clustering features using HDBSCAN
     def cluster_hdbscan(self, features=None, min_samples=1, \
                         min_cluster_size=6, dry=False):
         """Do *hdbscan* clustering and return """
@@ -1055,6 +1079,7 @@ class ML(object):
             print(self.clustering["hdbscan"])
 
 
+    # Export clustering results to a file
     def save_clustering_results(self, loader, save_location=""):
         """Update JSONs report files with clustering results"""
         # TODO: Allow storing multiple clustering results based on parameters
@@ -1257,6 +1282,7 @@ class ML(object):
             return cluster_distribution
 
 
+    # Predict featuresPredict using featuresLabel
     def cluster_hdbscan_classifer(self, featuresLabel=None, featuresPredict=None, min_samples=1, \
                         min_cluster_size=6, dry=False):
         """Do *hdbscan* clustering and return """
@@ -1299,6 +1325,8 @@ class Loader(object):
             self.binaries[f].extract_basic_features()
 
 
+    # Load report binaries
+    # Use load_report_json instead of load_json
     def load_binaries_report(self, directory):
         self.binaries_location = directory + "/"
         for f in os.listdir(directory):
@@ -1322,6 +1350,7 @@ class Loader(object):
                 self.binaries[i].update(elements, root+[locations])
 
 
+    # Save updated binaries to a JSON file
     def save_binaries(self, alternative_location=""):
         """Save the binaries to given location if they have been updated."""
         if self.binaries_updated:
@@ -1405,7 +1434,7 @@ class Instance(object):
 
         self.name = name
 
-        # If virustotal is none, initalize total, 
+        # If virustotal is none, initalize total, positives, scans to None
         if self.report.get("virustotal") is None:
             self.total = None
             self.positives = None
@@ -1419,6 +1448,7 @@ class Instance(object):
         self.scans = self.report.get("virustotal").get("scans")
 
 
+    # Load reports and skip virustotal section
     def load_report_json(self, json_file, name="unknown"):
         """Load JSON formatted malware report. It can handle both a path to
         JSON file and a dictionary object."""
@@ -1469,6 +1499,7 @@ class Instance(object):
             self.label = "none"
 
 
+    # Add files (reports)
     def update(self, element, location):
         """Insert `element` at given `location`."""
         element_to_update = self.report
@@ -1488,12 +1519,14 @@ class Instance(object):
             json.dump(self.report, j_file)
 
 
+    # Extract static and dynamic features
     def extract_features(self):
         """Extract features of the loaded sample."""
         self.extract_features_static()
         self.extract_features_dynamic()
 
 
+    # Extract static features
     def extract_features_static(self):
         """Extract static features of the loaded sample."""
         self.feature_static_metadata()
@@ -1504,6 +1537,7 @@ class Instance(object):
         self.feature_static_imports()
 
 
+    # Extract dynamic features
     def extract_features_dynamic(self):
         """Extract dynamic features of the loaded sample."""
         self.feature_dynamic_imports()
@@ -1513,6 +1547,9 @@ class Instance(object):
         self.feature_dynamic_windowsapi()
 
 
+    # Get feasures from static binary
+    # Add three features: 
+    # size, FileDescription, OriginalFilename
     def feature_static_metadata(self):
         """Create features form extracted binary metadata."""
         # Get binary size
@@ -1541,6 +1578,10 @@ class Instance(object):
             self.report.get("target", {}).get("file", {}).get("type")
 
 
+    # Get feasures from static binary
+    # Add five features: 
+    # signed, Comments, ProductName, 
+    # LegalCopyright, InternalName, CompanyName
     def feature_static_signature(self):
         """Create features form binary signature check."""
         # Check availability of digital signature
@@ -1558,12 +1599,16 @@ class Instance(object):
                 self.features[attr_name] = attr.get("value")
 
 
+    # Pass
     def feature_static_heuristic(self):
         """Create features form results return by heuristic tools.
         **Not available for current JSON content.**"""
         pass
 
 
+    # Get feasures from static binary
+    # Add one feature: 
+    # packer
     def feature_static_packer(self):
         """Create feature from information returned by packer/cryptor
         detectors."""
@@ -1571,6 +1616,9 @@ class Instance(object):
             self.report.get("static", {}).get("peid_signatures", None)
 
 
+    # Get feasures from static binary
+    # Add three features: 
+    # languages, section_attrs, resource_attrs
     def feature_static_pef(self):
         """Create features from information derived form portable executable
         format."""
@@ -1609,6 +1657,9 @@ class Instance(object):
                 self.features["resource_attrs"][n] = f
 
 
+    # Get feasures from static binary
+    # Add one feature: 
+    # static_imports
     def feature_static_imports(self):
         """Extract features from static imports like referenced library
         functions."""
@@ -1630,6 +1681,9 @@ class Instance(object):
                     self.features["static_imports"][ddl_name].append(ref)
 
 
+    # Get feasures from dynamic binary
+    # Add three features: 
+    # mutex, processes, dynamic_imports
     def feature_dynamic_imports(self):
         """Extract features from dynamic imports, mutexes, and processes."""
         # Get mutexes
@@ -1649,6 +1703,12 @@ class Instance(object):
             .get("dll_loaded", [])
 
 
+    # Get feasures from dynamic binary
+    # Add one feature: 
+    # files_operations
+    # =========== which consist of ===========
+    # file_read, file_written, file_deleted, file_copied, 
+    # file_renamed, files_opened, files_exists, files_failed
     def feature_dynamic_filesystem(self):
         """Extract features from filesystem operations."""
         def flatten_list(structured):
@@ -1723,6 +1783,9 @@ class Instance(object):
         self.features["files_operations"] = len(list(set(file_operations)))
 
 
+    # Get feasures from dynamic binary
+    # Add four features: 
+    # tcp, udp, dns, http
     def feature_dynamic_network(self):
         """Extract features from network operations."""
         # Get TCP IP addresses
@@ -1775,6 +1838,9 @@ class Instance(object):
                 self.features["http"][c_data]["port"] = c_port
 
 
+    # Get feasures from dynamic binary
+    # Add two features: 
+    # regkey_written, regkey_deleted
     def feature_dynamic_registry(self):
         """Extract features from registry operations."""
         # Registry written
@@ -1787,6 +1853,9 @@ class Instance(object):
             .get("regkey_deleted", [])
 
 
+    # Get feasures from dynamic binary
+    # Add one feature: 
+    # api_stats
     def feature_dynamic_windowsapi(self):
         """Extract features from Windows API calls sequence."""
         self.features["api_stats"] = {}
@@ -1798,7 +1867,8 @@ class Instance(object):
                 else:
                     self.features["api_stats"][e] = apistats[d][e]
 
-
+    # Extract simple features under signatures
+    # Name => Description
     def extract_basic_features(self):
         """Extract very basic set of features from *signatures* JSON field.
         These are extracted characteristics of the binary by cuckoo sandbox."""
