@@ -1317,13 +1317,32 @@ class Instance(object):
         self.name = name
 
         # Get total and positives
-        if self.report.get("virustotal") is None:
-            print("Can't find virustotal")
         self.total = self.report.get("virustotal").get("total")
         self.positives = self.report.get("virustotal").get("positives")
         # Pull all VT normalised results
         self.scans = self.report.get("virustotal").get("scans")
 
+    def load_report_json(self, json_file, name="unknown"):
+        """Load JSON formatted malware report. It can handle both a path to
+        JSON file and a dictionary object."""
+        if isinstance(json_file, str):
+            self.json_path = json_file
+            with open(json_file, "r") as malware_report:
+                try:
+                    self.report = json.load(malware_report)
+                except ValueError, error:
+                    print >> sys.stderr, "Could not load file;", \
+                        malware_report, "is not a valid JSON file."
+                    print >> sys.stderr, "Exception: %s" % str(error)
+                    sys.exit(1)
+        elif isinstance(json_file, dict):
+            self.report = json_file
+        else:
+            # Unknown binary format
+            print >> sys.stderr, "Could not load the data *", json, "* is of " \
+                "unknown type: ", type(json), "."
+
+        self.name = name
 
     def label_sample(self, external_labels=None, label_type="family"):
         """Generate label for the loaded sample.
