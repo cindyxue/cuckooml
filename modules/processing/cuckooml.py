@@ -1355,7 +1355,8 @@ class Instance(object):
             self.total = None
             self.positives = None
             self.scans = None
-            
+            return
+
         # Get total and positives
         self.total = self.report.get("virustotal").get("total")
         self.positives = self.report.get("virustotal").get("positives")
