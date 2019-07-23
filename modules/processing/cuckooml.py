@@ -401,6 +401,9 @@ class ML(object):
         self.simple_features_description = {}
         self.features = None
         self.clustering = {}
+        self.target_features = None
+        self.target_simple_features = None
+        self.target_simple_features_description = {}
 
 
     def __log_bin(self, value, base=3):
@@ -520,6 +523,11 @@ class ML(object):
         self.simple_features , self.simple_features_description = \
             self.extract_simple_features(simple_features)
 
+    def load_target_simple_features(self, target_simple_features):
+        """Load simple features form an external object into pandas data
+        frame."""
+        self.target_simple_features , self.target_simple_features_description = \
+            self.extract_simple_features(target_simple_features)
 
     def export_simple_dataset(self, filename="simple_dataset.csv"):
         """Export a dataset consisting of malware labels and *simple* features
