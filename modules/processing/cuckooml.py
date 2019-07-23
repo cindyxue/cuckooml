@@ -555,6 +555,7 @@ class ML(object):
             for token in target_simple_features[binary]:
                 # Drop the features that is not in the model
                 if token not in self.simple_features_description:
+                    print(token + " is not in clustering")
                     continue
                 if token not in target_simple_features_description:
                     target_simple_features_description[token] = \
@@ -564,6 +565,7 @@ class ML(object):
         for binary in self.simple_features:
             for token in self.simple_features[binary]:
                 if token not in target_simple_features_description:
+                    print(token + " is not in target. Fill in none for this field.")
                     target_simple_features_description[token] = None
                     target_simple_features[binary][token] = None
 
