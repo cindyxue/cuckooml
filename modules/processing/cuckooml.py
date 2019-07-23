@@ -578,7 +578,9 @@ class ML(object):
                     target_simple_features_description[token] = None
                     target_simple_features[binary][token] = None
 
-        return aggr_target_features, target_simple_features_description
+        target_simple_features = aggr_target_features
+
+        return target_simple_features, target_simple_features_description
 
 
     def load_target_simple_features(self, target_simple_features):
