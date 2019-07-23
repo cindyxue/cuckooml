@@ -556,7 +556,7 @@ class ML(object):
             if col in target_simple_features:
                 aggr_target_features[col] = target_simple_features[col]
             else:
-                aggr_target_features[col] = None
+                aggr_target_features[col] = 0
 
         # print "aggr_target_features: "
         # print aggr_target_features
