@@ -797,15 +797,14 @@ class ML(object):
 
 
     # TODO: extract target features
-    def extract_target_features(self, target_features, include_API_calls=False, \
 
 
     # Accessor: get all features of targets
-    def load_target_features(self, target_features, include_API_calls=False, \
-                      include_API_calls_count=False):
-        """Load features form an external object into pandas data frame."""
-        self.target_features = self.load_target_features(target_features, include_API_calls,
-                                              include_API_calls_count)
+    # def load_target_features(self, target_features, include_API_calls=False, \
+    #                   include_API_calls_count=False):
+    #     """Load features form an external object into pandas data frame."""
+    #     self.target_features = self.extract_target_features(target_features, include_API_calls,
+    #                                           include_API_calls_count)
 
 
     # Export labels and all features to a csv file
