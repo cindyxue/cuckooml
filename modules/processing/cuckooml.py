@@ -531,11 +531,50 @@ class ML(object):
             self.extract_simple_features(simple_features)
 
 
+    def extract_target_simple_features(self, target_simple_features):
+        """Extract simple features form the target object into pandas data
+        frame."""
+
+        if self.simple_features is None or self.simple_features_description is None:
+            if self.simple_features is None:
+                print "Load simple_features first"
+            if self.simple_features_description is None:
+                print "Load simple_features_description first"
+            return
+
+        target_simple_features = pd.DataFrame(target_simple_features).T
+        target_simple_features.fillna(False, inplace=True)
+        # Convert to bool: True/False
+        target_simple_features = target_simple_features.astype(bool)
+        # Change to int: 1/0
+        target_simple_features = target_simple_features.astype(int)
+
+        # Aggregate features descriptions
+        target_simple_features_description = {}
+        for binary in target_simple_features:
+            for token in target_simple_features[binary]:
+                # Drop the features that is not in the model
+                if token not in self.simple_features_description:
+                    continue
+                if token not in target_simple_features_description:
+                    target_simple_features_description[token] = \
+                        target_simple_features[binary][token]
+
+        # Fillna to those features that are in the clustering but not in the target
+        for binary in self.simple_features:
+            for token in self.simple_features[binary]:
+                if token not in target_simple_features_description:
+                    target_simple_features_description[token] = None
+                    target_simple_features[binary][token] = None
+
+        return target_simple_features, target_simple_features_description
+
+
     def load_target_simple_features(self, target_simple_features):
         """Load simple features of targets form an external object into pandas data
         frame."""
         self.target_simple_features , self.target_simple_features_description = \
-            self.extract_simple_features(target_simple_features)
+            self.extract_target_simple_features(target_simple_features)
 
 
     def export_simple_dataset(self, filename="simple_dataset.csv"):
