@@ -728,7 +728,7 @@ class ML(object):
                                               include_API_calls_count)
 
 
-    def load_target_features(self, features, include_API_calls=False, \
+    def load_target_features(self, target_features, include_API_calls=False, \
                       include_API_calls_count=False):
         """Load features form an external object into pandas data frame."""
         self.features = self.extract_features(features, include_API_calls,
