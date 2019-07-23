@@ -558,6 +558,9 @@ class ML(object):
             else:
                 aggr_target_features[col] = None
 
+        print "aggr_target_features: "
+        print aggr_target_features
+
         # Aggregate features descriptions
         target_simple_features_description = {}
         for binary in target_simple_features:
