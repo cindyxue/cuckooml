@@ -797,13 +797,14 @@ class ML(object):
 
 
     # TODO: extract target features
+    def extract_target_features(self, target_features, include_API_calls=False, \
 
 
     # Accessor: get all features of targets
     def load_target_features(self, target_features, include_API_calls=False, \
                       include_API_calls_count=False):
         """Load features form an external object into pandas data frame."""
-        self.target_features = self.extract_features(target_features, include_API_calls,
+        self.target_features = self.load_target_features(target_features, include_API_calls,
                                               include_API_calls_count)
 
 
@@ -1079,6 +1080,12 @@ class ML(object):
             print(self.clustering["hdbscan"])
 
 
+    def hdbscan_fit(self, features=None, min_samples=1, min_cluster_size=6):
+        hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
+                          min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
+        return hdbscan_fit
+
+
     # Export clustering results to a file
     def save_clustering_results(self, loader, save_location=""):
         """Update JSONs report files with clustering results"""
@@ -1303,6 +1310,12 @@ class ML(object):
                           min_cluster_size=min_cluster_size, prediction_data=True).fit(featuresLabel)
         hdbscan_predictions = hdbscan.approximate_predict(hdbscan_fit, featuresPredict)
         print(hdbscan_predictions)
+
+
+    def classifier_hdbscan(self, cluster, featuresPredict=None):
+        hdbscan_predictions = hdbscan.approximate_predict(cluster, featuresPredict)
+        print(hdbscan_predictions)
+
 
 
 class Loader(object):
