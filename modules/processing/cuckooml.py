@@ -549,6 +549,15 @@ class ML(object):
         # Change to int: 1/0
         target_simple_features = target_simple_features.astype(int)
 
+        aggr_target_features = pd.DataFrame()
+
+        # Aggregate simple features
+        for col in simple_features:
+            if col in target_simple_features:
+                aggr_target_features[col] = target_simple_features[col]
+            else:
+                aggr_target_features[col] = None
+
         # Aggregate features descriptions
         target_simple_features_description = {}
         for binary in target_simple_features:
@@ -569,7 +578,7 @@ class ML(object):
                     target_simple_features_description[token] = None
                     target_simple_features[binary][token] = None
 
-        return target_simple_features, target_simple_features_description
+        return aggr_target_features, target_simple_features_description
 
 
     def load_target_simple_features(self, target_simple_features):
