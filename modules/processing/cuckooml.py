@@ -1220,6 +1220,16 @@ class Loader(object):
             self.binaries[f].extract_basic_features()
 
 
+    def load_binaries_report(self, directory):
+        self.binaries_location = directory + "/"
+        for f in os.listdir(directory):
+            self.binaries[f] = Instance()
+            self.binaries[f].load_report_json(directory+"/"+f, f)
+            self.binaries[f].label_sample()
+            self.binaries[f].extract_features()
+            self.binaries[f].extract_basic_features()
+
+
     def update_binaries(self, elements, root, locations):
         """Append `elements` to the loaded JSONs at given `locations`."""
         if isinstance(elements, pd.DataFrame) and isinstance(locations, dict):
