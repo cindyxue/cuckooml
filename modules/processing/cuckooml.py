@@ -401,6 +401,8 @@ class ML(object):
         self.simple_features_description = {}
         self.features = None
         self.clustering = {}
+
+        self.target_labels = None
         self.target_features = None
         self.target_simple_features = None
         self.target_simple_features_description = {}
@@ -496,6 +498,11 @@ class ML(object):
         self.labels = self.extract_labels(labels)
 
 
+    def load_target_labels(self, target_labels):
+        """Load labels of targets into pandas data frame."""
+        self.target_labels = self.extract_labels(target_labels)
+
+
     def extract_simple_features(self, simple_features):
         """Extract simple features form an external object into pandas data
         frame."""
@@ -523,11 +530,13 @@ class ML(object):
         self.simple_features , self.simple_features_description = \
             self.extract_simple_features(simple_features)
 
+
     def load_target_simple_features(self, target_simple_features):
-        """Load simple features form an external object into pandas data
+        """Load simple features of targets form an external object into pandas data
         frame."""
         self.target_simple_features , self.target_simple_features_description = \
             self.extract_simple_features(target_simple_features)
+
 
     def export_simple_dataset(self, filename="simple_dataset.csv"):
         """Export a dataset consisting of malware labels and *simple* features
@@ -716,6 +725,13 @@ class ML(object):
                       include_API_calls_count=False):
         """Load features form an external object into pandas data frame."""
         self.features = self.extract_features(features, include_API_calls,
+                                              include_API_calls_count)
+
+
+   def load_target_features(self, target_features, include_API_calls=False, \
+                      include_API_calls_count=False):
+        """Load features form an external object into pandas data frame."""
+        self.target_features = self.extract_features(target_features, include_API_calls,
                                               include_API_calls_count)
 
 
