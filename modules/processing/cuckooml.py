@@ -549,17 +549,17 @@ class ML(object):
         # Change to int: 1/0
         target_simple_features = target_simple_features.astype(int)
 
-        aggr_target_features = pd.DataFrame()
+        # aggr_target_features = pd.DataFrame()
 
-        # Aggregate simple features
-        for col in self.simple_features:
-            if col in target_simple_features:
-                aggr_target_features[col] = target_simple_features[col]
-            else:
-                aggr_target_features[col] = None
+        # # Aggregate simple features
+        # for col in self.simple_features:
+        #     if col in target_simple_features:
+        #         aggr_target_features[col] = target_simple_features[col]
+        #     else:
+        #         aggr_target_features[col] = None
 
-        print "aggr_target_features: "
-        print aggr_target_features
+        # print "aggr_target_features: "
+        # print aggr_target_features
 
         # Aggregate features descriptions
         target_simple_features_description = {}
@@ -581,7 +581,7 @@ class ML(object):
                     target_simple_features_description[token] = None
                     target_simple_features[binary][token] = None
 
-        target_simple_features = aggr_target_features
+        # target_simple_features = aggr_target_features
 
         return target_simple_features, target_simple_features_description
 
