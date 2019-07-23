@@ -552,7 +552,7 @@ class ML(object):
         aggr_target_features = pd.DataFrame()
 
         # Aggregate simple features
-        for col in simple_features:
+        for col in self.simple_features:
             if col in target_simple_features:
                 aggr_target_features[col] = target_simple_features[col]
             else:
