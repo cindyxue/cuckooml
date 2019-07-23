@@ -1350,11 +1350,18 @@ class Instance(object):
 
         self.name = name
 
+        # If virustotal is none, initalize total, 
+        if self.report.get("virustotal") is None:
+            self.total = None
+            self.positives = None
+            self.scans = None
+            
         # Get total and positives
         self.total = self.report.get("virustotal").get("total")
         self.positives = self.report.get("virustotal").get("positives")
         # Pull all VT normalised results
         self.scans = self.report.get("virustotal").get("scans")
+
 
     def load_report_json(self, json_file, name="unknown"):
         """Load JSON formatted malware report. It can handle both a path to
@@ -1377,6 +1384,9 @@ class Instance(object):
                 "unknown type: ", type(json), "."
 
         self.name = name
+
+        self.total = None
+
 
     def label_sample(self, external_labels=None, label_type="family"):
         """Generate label for the loaded sample.
