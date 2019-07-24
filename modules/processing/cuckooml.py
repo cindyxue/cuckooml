@@ -1437,6 +1437,26 @@ class ML(object):
         
         return res        
 
+
+    def calc_similarity_sample(self, count_features_arr, sample_features_arr, do_print=False):
+        res = {}
+        for item in count_features_arr:
+            cur_vector = count_features_arr[item]
+            similarities = []
+            for other_item in sample_features_arr:
+                vec1 = np.array([count_features_arr[item]])
+                vec2 = np.array([sample_features_arr[other_item]])
+                cur_sim = cosine_similarity(vec1, vec2)
+                similarities.append(cur_sim)
+    #             print cur_sim
+            avr_sim = reduce(lambda x, y: x + y, similarities) / len(similarities)
+            res[item] = avr_sim
+
+        if do_print:
+            print(res)
+        
+        return res            
+
 class Loader(object):
     """Loads instances for analysis and give possibility to extract properties
     of interest."""
