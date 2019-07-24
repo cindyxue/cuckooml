@@ -1079,6 +1079,8 @@ class ML(object):
             print(self.clustering["hdbscan"])
 
 
+    # Do machine learning using HDBSCAN
+    # Return hdbscan_fit
     def hdbscan_fit(self, features=None, min_samples=1, min_cluster_size=6):
         hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
                           min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
@@ -1288,7 +1290,7 @@ class ML(object):
             return cluster_distribution
 
 
-    # Predict featuresPredict using featuresLabel
+    # Learn and predict featuresPredict using featuresLabel
     def cluster_hdbscan_classifer(self, featuresLabel=None, featuresPredict=None, min_samples=1, \
                         min_cluster_size=6, dry=False):
         """Do *hdbscan* clustering and return """
@@ -1311,11 +1313,42 @@ class ML(object):
         print(hdbscan_predictions)
 
 
-    def classifier_hdbscan(self, cluster, featuresPredict=None):
+    # Predict by the cluster passed by
+    # Return the prediction results
+    def classifier_hdbscan(self, cluster, featuresPredict=None, print=False):
         hdbscan_predictions = hdbscan.approximate_predict(cluster, featuresPredict)
-        print(hdbscan_predictions)
+        if print is True:
+            print(hdbscan_predictions)
         return hdbscan_predictions
 
+    # Count the number of features each target has
+    # Return a dict (idx, counter of features)
+    def count_features(self, classfier=None, target_features=None, label=-1, print=False):
+        if classfier is None:
+            print("No classifer specified")
+            return
+
+        if target_features is None:
+            if self.target_features is None:
+                print("No target features specified")
+                return
+            else
+                target_features = self.target_features
+
+        pred_label = classfier[0]
+        label_arr = np.where(pred_label==label)
+        label_arr = label_arr[0]
+        target_features_arr = target_features.as_matrix()
+        target_counter_dict = {}
+
+        for item in label_arr:
+            cur_features = np.array(target_features_arr[item])
+            target_counter_dict[item] = collections.Counter(cur_features)
+
+        if print is True:
+            print(target_counter_dict)
+
+        return target_counter_dict
 
 
 class Loader(object):
