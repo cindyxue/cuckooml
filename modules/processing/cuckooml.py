@@ -1321,8 +1321,29 @@ class ML(object):
             print(hdbscan_predictions)
         return hdbscan_predictions
 
-    def collect_features(self, classfier=None, target_features=None, label=-1, do_print=False, \
-                        label_features=False):
+
+    # def collect_features(self, classfier=None, target_features=None, label=-1, do_print=False, \
+    #                     label_features=False):
+    #     if classfier is None:
+    #         print("No classifer specified")
+    #         return
+
+    #     if target_features is None:
+    #         if self.target_features is None:
+    #             print("No target features specified")
+    #             return
+    #         else:
+    #             target_features = self.target_features
+
+    #     if label_features:
+    #         return count_and_print_features(self, classfier, target_features, label, do_print)
+    #     else:
+    #         return count_features(self, classfier, target_features, label, do_print)
+
+
+    # Count the number of features each target has
+    # Return a dict (idx, counter of features)
+    def count_features(self, classfier=None, target_features=None, label=-1, do_print=False):
         if classfier is None:
             print("No classifer specified")
             return
@@ -1334,14 +1355,6 @@ class ML(object):
             else:
                 target_features = self.target_features
 
-        if label_features:
-            return count_and_print_features(self, classfier, target_features, label, do_print)
-        else:
-            return count_features(self, classfier, target_features, label, do_print)
-
-    # Count the number of features each target has
-    # Return a dict (idx, counter of features)
-    def count_features(self, classfier=None, target_features=None, label=-1, do_print=False):
         pred_label = classfier[0]
         label_arr = np.where(pred_label==label)
         label_arr = label_arr[0]
@@ -1357,7 +1370,19 @@ class ML(object):
 
         return target_counter_dict
 
+    # Print features that exist
     def count_and_print_features(self, classfier=None, target_features=None, label=-1, do_print=False):
+        if classfier is None:
+            print("No classifer specified")
+            return
+
+        if target_features is None:
+            if self.target_features is None:
+                print("No target features specified")
+                return
+            else:
+                target_features = self.target_features
+
         pred_label = classfier[0]
         label_arr = np.where(pred_label==label)
         label_arr = label_arr[0]
