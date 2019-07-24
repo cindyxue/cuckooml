@@ -1332,7 +1332,7 @@ class ML(object):
             if self.target_features is None:
                 print("No target features specified")
                 return
-            else
+            else:
                 target_features = self.target_features
 
         pred_label = classfier[0]
