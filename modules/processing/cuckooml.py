@@ -4,6 +4,7 @@
 # See the file 'docs/LICENSE' for copying permission.
 
 import collections
+import operator
 import datetime
 import itertools
 import json
@@ -798,17 +799,6 @@ class ML(object):
                                               include_API_calls_count)
 
 
-    # TODO: extract target features
-
-
-    # Accessor: get all features of targets
-    # def load_target_features(self, target_features, include_API_calls=False, \
-    #                   include_API_calls_count=False):
-    #     """Load features form an external object into pandas data frame."""
-    #     self.target_features = self.extract_target_features(target_features, include_API_calls,
-    #                                           include_API_calls_count)
-
-
     # Export labels and all features to a csv file
     def export_dataset(self, filename="dataset.csv"):
         """Export a dataset consisting of malware labels and features to CSV
@@ -1081,14 +1071,6 @@ class ML(object):
             print(self.clustering["hdbscan"])
 
 
-    # Do machine learning using HDBSCAN
-    # Return hdbscan_fit
-    def hdbscan_fit(self, features=None, min_samples=1, min_cluster_size=6):
-        hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
-                          min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
-        return hdbscan_fit
-
-
     # Export clustering results to a file
     def save_clustering_results(self, loader, save_location=""):
         """Update JSONs report files with clustering results"""
@@ -1292,6 +1274,16 @@ class ML(object):
             return cluster_distribution
 
 
+    # ******************** Cindy's code ********************
+
+    # Do machine learning using HDBSCAN
+    # Return hdbscan_fit
+    def hdbscan_fit(self, features=None, min_samples=1, min_cluster_size=6):
+        hdbscan_fit = hdbscan.HDBSCAN(min_samples=min_samples, \
+                          min_cluster_size=min_cluster_size, prediction_data=True).fit(features)
+        return hdbscan_fit
+
+
     # Learn and predict featuresPredict using featuresLabel
     def cluster_hdbscan_classifer(self, featuresLabel=None, featuresPredict=None, min_samples=1, \
                         min_cluster_size=6, dry=False):
@@ -1322,26 +1314,6 @@ class ML(object):
         if do_print is True:
             print(hdbscan_predictions)
         return hdbscan_predictions
-
-
-    # def collect_features(self, classfier=None, target_features=None, label=-1, do_print=False, \
-    #                     label_features=False):
-    #     if classfier is None:
-    #         print("No classifer specified")
-    #         return
-
-    #     if target_features is None:
-    #         if self.target_features is None:
-    #             print("No target features specified")
-    #             return
-    #         else:
-    #             target_features = self.target_features
-
-    #     if label_features:
-    #         return count_and_print_features(self, classfier, target_features, label, do_print)
-    #     else:
-    #         return count_features(self, classfier, target_features, label, do_print)
-
 
 
     # Count the number of features each target has
@@ -1438,6 +1410,7 @@ class ML(object):
         return res        
 
 
+    # Calculate avr similarities for each key and a sample array
     def calc_similarity_sample(self, count_features_arr, sample_features_arr, do_print=False):
         res = {}
         for item in count_features_arr:
@@ -1448,7 +1421,6 @@ class ML(object):
                 vec2 = np.array([sample_features_arr[other_item]])
                 cur_sim = cosine_similarity(vec1, vec2)
                 similarities.append(cur_sim)
-    #             print cur_sim
             avr_sim = reduce(lambda x, y: x + y, similarities) / len(similarities)
             res[item] = avr_sim
 
@@ -1456,6 +1428,26 @@ class ML(object):
             print(res)
         
         return res            
+
+
+    # Union features and sorted by the number of times each features appear
+    def union_features(self, in_dict, sorted=True):
+        map_a = {}
+        for key in in_dict:
+            cur_features = in_dict[key]
+        #     print cur_features
+            for fea in cur_features:
+                if fea in map_a:
+                    map_a[fea] += 1
+                else:
+                    map_a[fea] = 1
+        
+        if not sorted:
+            return map_a        
+        else:
+            sorted_map = sorted(map_a.items(), key=operator.itemgetter(1), reverse=True)
+            return sorted_map
+
 
 class Loader(object):
     """Loads instances for analysis and give possibility to extract properties
