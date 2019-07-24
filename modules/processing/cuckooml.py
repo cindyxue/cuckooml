@@ -1314,6 +1314,7 @@ class ML(object):
     def classifier_hdbscan(self, cluster, featuresPredict=None):
         hdbscan_predictions = hdbscan.approximate_predict(cluster, featuresPredict)
         print(hdbscan_predictions)
+        return hdbscan_predictions
 
 
 
