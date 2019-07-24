@@ -1431,7 +1431,7 @@ class ML(object):
 
 
     # Union features and sorted by the number of times each features appear
-    def union_features(self, in_dict, sorted=True):
+    def union_features(self, in_dict, is_sorted=True):
         map_a = {}
         for key in in_dict:
             cur_features = in_dict[key]
@@ -1442,7 +1442,7 @@ class ML(object):
                 else:
                     map_a[fea] = 1
         
-        if not sorted:
+        if not is_sorted:
             return map_a        
         else:
             sorted_map = sorted(map_a.items(), key=operator.itemgetter(1), reverse=True)
