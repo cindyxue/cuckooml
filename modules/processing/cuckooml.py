@@ -24,6 +24,8 @@ try:
     from sklearn import metrics     # score
     from sklearn.cluster import DBSCAN      # core, border, outlier
     from sklearn.manifold import TSNE       # visualize high-dimensional data
+    from sklearn.metrics.pairwise import cosine_similarity      # To calculate similarity
+
 
 except ImportError, e:
     print >> sys.stderr, "Some of the packages required by CuckooML are not \
@@ -1341,9 +1343,11 @@ class ML(object):
     #         return count_features(self, classfier, target_features, label, do_print)
 
 
+
     # Count the number of features each target has
     # Return a dict (idx, counter of features)
-    def count_features(self, classfier=None, target_features=None, label=-1, do_print=False):
+    def count_features(self, classfier=None, target_features=None, label=-1, do_print=False, \
+                        use_counter=True):
         if classfier is None:
             print("No classifer specified")
             return
@@ -1363,7 +1367,10 @@ class ML(object):
 
         for item in label_arr:
             cur_features = np.array(target_features_arr[item])
-            target_counter_dict[item] = collections.Counter(cur_features)
+            if use_counter is True:
+                target_counter_dict[item] = collections.Counter(cur_features)
+            else:
+                target_counter_dict[item] = cur_features
 
         if do_print is True:
             print(target_counter_dict)
