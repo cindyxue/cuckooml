@@ -1321,9 +1321,8 @@ class ML(object):
             print(hdbscan_predictions)
         return hdbscan_predictions
 
-    # Count the number of features each target has
-    # Return a dict (idx, counter of features)
-    def count_features(self, classfier=None, target_features=None, label=-1, do_print=False):
+    def collect_features(self, classfier=None, target_features=None, label=-1, do_print=False, \
+                        label_features=False):
         if classfier is None:
             print("No classifer specified")
             return
@@ -1335,6 +1334,14 @@ class ML(object):
             else:
                 target_features = self.target_features
 
+        if label_features:
+            return count_and_print_features(self, classfier, target_features, label, do_print)
+        else:
+            return count_features(self, classfier, target_features, label, do_print)
+
+    # Count the number of features each target has
+    # Return a dict (idx, counter of features)
+    def count_features(self, classfier=None, target_features=None, label=-1, do_print=False):
         pred_label = classfier[0]
         label_arr = np.where(pred_label==label)
         label_arr = label_arr[0]
@@ -1348,6 +1355,29 @@ class ML(object):
         if do_print is True:
             print(target_counter_dict)
 
+        return target_counter_dict
+
+    def count_and_print_features(self, classfier=None, target_features=None, label=-1, do_print=False):
+        pred_label = classfier[0]
+        label_arr = np.where(pred_label==label)
+        label_arr = label_arr[0]
+        target_features_arr = target_features.as_matrix()
+        target_counter_dict = {}
+        col_index_array = target_features.columns.values
+
+        for item in label_arr:
+            cur_features = np.array(target_features_arr[item])
+            cur_features_label = []
+            for idx in range(0, len(cur_features)):
+                if cur_features[idx] == 1:
+                    cur_features_label.append(col_index_array[idx])
+        #             print col_index_array[idx]
+        #     print cur_features_label
+            target_counter_dict[item] = cur_features_label
+
+        if do_print is True:
+            print(target_counter_dict)
+            
         return target_counter_dict
 
 
