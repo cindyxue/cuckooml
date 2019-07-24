@@ -1315,15 +1315,15 @@ class ML(object):
 
     # Predict by the cluster passed by
     # Return the prediction results
-    def classifier_hdbscan(self, cluster, featuresPredict=None, print=False):
+    def classifier_hdbscan(self, cluster, featuresPredict=None, do_print=False):
         hdbscan_predictions = hdbscan.approximate_predict(cluster, featuresPredict)
-        if print is True:
+        if do_print is True:
             print(hdbscan_predictions)
         return hdbscan_predictions
 
     # Count the number of features each target has
     # Return a dict (idx, counter of features)
-    def count_features(self, classfier=None, target_features=None, label=-1, print=False):
+    def count_features(self, classfier=None, target_features=None, label=-1, do_print=False):
         if classfier is None:
             print("No classifer specified")
             return
@@ -1345,7 +1345,7 @@ class ML(object):
             cur_features = np.array(target_features_arr[item])
             target_counter_dict[item] = collections.Counter(cur_features)
 
-        if print is True:
+        if do_print is True:
             print(target_counter_dict)
 
         return target_counter_dict
