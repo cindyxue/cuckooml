@@ -1476,7 +1476,6 @@ class Loader(object):
         for f in os.listdir(directory):
             self.binaries[f] = Instance()
             self.binaries[f].load_report_json(directory+"/"+f, f)
-            self.binaries[f].label_sample()
             self.binaries[f].extract_features()
             self.binaries[f].extract_basic_features()
 
@@ -1523,6 +1522,24 @@ class Loader(object):
         return labels
 
 
+    def put_white(self):
+        simple_features = {}
+        for i in self.binaries:
+            idx = i.index('_')
+            key = i[:idx]
+            simple_features[key] = 'white'
+        return simple_features 
+
+
+    def put_black(self):
+        simple_features = {}
+        for i in self.binaries:
+            idx = i.index('_')
+            key = i[:idx]
+            simple_features[key] = 'black'
+        return simple_features 
+
+
     def get_features(self):
         """Return complex binary features as a labelled dictionary."""
         features = {}
@@ -1537,6 +1554,16 @@ class Loader(object):
         for i in self.binaries:
             simple_features[i] = self.binaries[i].basic_features
         return simple_features
+
+
+    # Edit the key name to md5
+    def get_simple_features_json(self):
+        simple_features = {}
+        for i in self.binaries:
+            idx = i.index('_')
+            key = i[:idx]
+            simple_features[key] = self.binaries[i].basic_features
+        return simple_features       
 
 
 class Instance(object):
