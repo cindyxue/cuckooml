@@ -1646,11 +1646,15 @@ class Instance(object):
         You can use platform, cve, metatype, type, and family (default)."""
         merged_labels = []
 
+        if external_labels is not None:
+            merged_labels = external_labels
+            return
+
         if external_labels is None and self.scans is not None:
             for vendor in self.scans:
                 merged_labels += self.scans[vendor]["normalized"][label_type]
-        elif external_labels is not None and self.scans is None:
-            merged_labels = external_labels
+        # elif external_labels is not None and self.scans is None:
+        #     merged_labels = external_labels
 
         if not merged_labels:
             self.label = "none"
