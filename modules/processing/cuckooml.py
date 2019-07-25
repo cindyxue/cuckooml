@@ -1648,6 +1648,8 @@ class Instance(object):
 
         if external_labels is not None:
             merged_labels = external_labels
+            print "external_labels is not none"
+            print external_labels
             return
 
         if external_labels is None and self.scans is not None:
