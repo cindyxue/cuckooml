@@ -1474,6 +1474,8 @@ class Loader(object):
     def load_binaries_report(self, directory, label=None):
         self.binaries_location = directory + "/"
         for f in os.listdir(directory):
+            idx = f.index('_')
+            f = f[:idx]
             self.binaries[f] = Instance()
             self.binaries[f].load_report_json(directory+"/"+f, f)
             if label is None:
@@ -1648,8 +1650,8 @@ class Instance(object):
 
         if external_labels is not None:
             merged_labels = external_labels
-            print "external_labels is not none"
-            print external_labels
+            # print "external_labels is not none"
+            # print external_labels
             return
 
         if external_labels is None and self.scans is not None:
