@@ -1531,7 +1531,10 @@ class Loader(object):
         labels = {}
         for i in self.binaries:
             idx = i.index('_')
-            key = i[:idx]
+            if idx == -1:
+                key = i
+            else:
+                key = i[:idx]
             labels[key] = self.binaries[i].label
         return labels
 
@@ -1557,7 +1560,10 @@ class Loader(object):
         simple_features = {}
         for i in self.binaries:
             idx = i.index('_')
-            key = i[:idx]
+            if idx == -1:
+                key = i
+            else:
+                key = i[:idx]
             simple_features[key] = self.binaries[i].basic_features
         return simple_features       
 
