@@ -1471,11 +1471,15 @@ class Loader(object):
 
     # Load report binaries
     # Use load_report_json instead of load_json
-    def load_binaries_report(self, directory):
+    def load_binaries_report(self, directory, label=None):
         self.binaries_location = directory + "/"
         for f in os.listdir(directory):
             self.binaries[f] = Instance()
             self.binaries[f].load_report_json(directory+"/"+f, f)
+            if label is None:
+                self.binaries[f].label_sample()
+            else:
+                self.binaries[f].label_sample(external_labels=label)
             self.binaries[f].extract_features()
             self.binaries[f].extract_basic_features()
 
@@ -1522,14 +1526,13 @@ class Loader(object):
         return labels
 
 
-    # Put white or black label
-    # Return dict of labels
-    def put_label(self, label='white'):
+    def get_labels_md5(self):
+        """Return binary labels as a labelled dictionary."""
         labels = {}
         for i in self.binaries:
             idx = i.index('_')
             key = i[:idx]
-            labels[key] = label
+            labels[key] = self.binaries[i].label
         return labels
 
 
@@ -1550,7 +1553,7 @@ class Loader(object):
 
 
     # Edit the key name to md5
-    def get_simple_features_json(self):
+    def get_simple_features_md5(self):
         simple_features = {}
         for i in self.binaries:
             idx = i.index('_')
