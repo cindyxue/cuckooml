@@ -1530,11 +1530,11 @@ class Loader(object):
         """Return binary labels as a labelled dictionary."""
         labels = {}
         for i in self.binaries:
-            idx = i.index('_')
-            if idx == -1:
-                key = i
+            if "_" not in i:
+                idx = i.index('.')
             else:
-                key = i[:idx]
+                idx = i.index('_')
+            key = i[:idx]
             labels[key] = self.binaries[i].label
         return labels
 
@@ -1559,11 +1559,11 @@ class Loader(object):
     def get_simple_features_md5(self):
         simple_features = {}
         for i in self.binaries:
-            idx = i.index('_')
-            if idx == -1:
-                key = i
+            if "_" not in i:
+                idx = i.index('.')
             else:
-                key = i[:idx]
+                idx = i.index('_')
+            key = i[:idx]
             simple_features[key] = self.binaries[i].basic_features
         return simple_features       
 
