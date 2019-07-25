@@ -1522,22 +1522,15 @@ class Loader(object):
         return labels
 
 
-    def put_white(self):
-        simple_features = {}
+    # Put white or black label
+    # Return dict of labels
+    def put_label(self, label='white'):
+        labels = {}
         for i in self.binaries:
             idx = i.index('_')
             key = i[:idx]
-            simple_features[key] = 'white'
-        return simple_features 
-
-
-    def put_black(self):
-        simple_features = {}
-        for i in self.binaries:
-            idx = i.index('_')
-            key = i[:idx]
-            simple_features[key] = 'black'
-        return simple_features 
+            labels[key] = label
+        return labels
 
 
     def get_features(self):
