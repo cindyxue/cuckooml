@@ -12,8 +12,8 @@ import os
 import re
 import sys
 import time
-from lib.cuckoo.common.config import Config
-from lib.cuckoo.common.constants import CUCKOO_ROOT
+# from lib.cuckoo.common.config import Config
+# from lib.cuckoo.common.constants import CUCKOO_ROOT
 from math import log
 
 try:
@@ -26,6 +26,13 @@ try:
     from sklearn.cluster import DBSCAN      # core, border, outlier
     from sklearn.manifold import TSNE       # visualize high-dimensional data
     from sklearn.metrics.pairwise import cosine_similarity      # To calculate similarity
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.tree import DecisionTreeClassifier
+    from sklearn.datasets import make_classification
+    from sklearn.model_selection import cross_val_score
+    from sklearn import metrics
 
 
 except ImportError, e:
@@ -1276,6 +1283,7 @@ class ML(object):
 
     # ******************** Cindy's code ********************
 
+
     # Do machine learning using HDBSCAN
     # Return hdbscan_fit
     def hdbscan_fit(self, features=None, min_samples=1, min_cluster_size=6):
@@ -1447,6 +1455,96 @@ class ML(object):
         else:
             sorted_map = sorted(map_a.items(), key=operator.itemgetter(1), reverse=True)
             return sorted_map
+
+
+    # ******************** Supervised ML Model ********************
+
+    def MLClassifier(self, algorithm='random_forest', features=None, labels=None, target_features=None, \
+                        target_labels=None, doPredict=True):
+        if features is None:
+            print "You didn't indicate features to be used. Internal features \
+                will be used."
+            if self.features is None:
+                print "Internal features not available."
+                return
+            else:
+                features = self.simple_features
+
+        if labels is None:
+            print "You didn't indicate labels to be used. Internal labels \
+                will be used."
+            if self.labels is None:
+                print "Internal labels not available."
+                return
+            else:
+                labels = self.labels
+
+        if not doPredict:
+            if target_features is None:
+                print "You didn't indicate target features to be used. Internal target features \
+                    will be used."
+                if self.target_features is None:
+                    print "Internal target features not available."
+                    return
+                else:
+                    target_features = self.target_simple_features
+
+            if target_labels is None:
+                print "You didn't indicate target labels to be used. Internal target labels \
+                    will be used."
+                if self.target_labels is None:
+                    print "Internal target labels not available."
+                    return
+                else:
+                    target_labels = self.target_labels
+
+        if algorithm is 'random_forest':
+            n_estimators = input("Please input n_estimators: ")
+            return randomForestClassifier(self, features, labels, target_features, \
+                                    target_labels, doPredict, n_estimators)
+
+
+    def randomForestClassifier(self, features=None, labels=None, target_features=None, \
+                                target_labels=None, doPredict=True, n_estimators=5):
+
+        clf = RandomForestClassifier(n_estimators=n_estimators)
+        model = clf.fit(features, labels)
+
+        if not doPredict:
+            return model
+
+        pred = clf.predict(target_features)
+        score = metrics.accuracy_score(pred, target_labels)
+        return score
+        
+
+    def randomForestCrossValidation(self, algorithm='random_forest', features=None, labels=None, \
+                                    cv=10, scoring='accuracy'):
+        if features is None:
+            print "You didn't indicate features to be used. Internal features \
+                will be used."
+            if self.features is None:
+                print "Internal features not available."
+                return
+            else:
+                features = self.simple_features
+
+        if labels is None:
+            print "You didn't indicate labels to be used. Internal labels \
+                will be used."
+            if self.labels is None:
+                print "Internal labels not available."
+                return
+            else:
+                labels = self.labels
+
+        if algorithm is 'random_forest':
+            n_estimators = input("Please input n_estimators: ")
+            model = RandomForestClassifier(n_estimators=n_estimators)
+
+        cross_score = cross_val_score(model, features, labels, cv=cv, scoring=scoring)
+
+        return cross_score.mean()
 
 
 class Loader(object):
