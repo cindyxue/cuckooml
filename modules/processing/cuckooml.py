@@ -1500,7 +1500,7 @@ class ML(object):
 
         if algorithm is 'random_forest':
             n_estimators = input("Please input n_estimators: ")
-            return randomForestClassifier(self, features, labels, target_features, \
+            return self.randomForestClassifier(self, features, labels, target_features, \
                                     target_labels, doPredict, n_estimators)
 
 
