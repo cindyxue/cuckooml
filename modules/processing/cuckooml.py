@@ -1664,7 +1664,9 @@ class ML(object):
             key = col_index_array[cur_ind]
             feature_dict[key] = importances[cur_ind]
 
-        return feature_dict    
+        sorted_dict = sorted(feature_dict.items(), key=operator.itemgetter(1), reverse=True)
+
+        return sorted_dict    
 
 
 
