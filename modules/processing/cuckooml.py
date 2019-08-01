@@ -1460,7 +1460,7 @@ class ML(object):
     # ******************** Supervised ML Model ********************
 
     def MLClassifier(self, algorithm='random_forest', features=None, labels=None, target_features=None, \
-                        target_labels=None, doPredict=True):
+                        target_labels=None, doPredict=True, default=True):
         if features is None:
             print "You didn't indicate features to be used. Internal features \
                 will be used."
@@ -1499,8 +1499,32 @@ class ML(object):
                     target_labels = self.target_labels
 
         if algorithm is 'random_forest':
-            n_estimators = input("Please input n_estimators: ")
-            return self.randomForestClassifier(features, labels, target_features, target_labels, doPredict, n_estimators)
+            if default:
+                return self.randomForestClassifier(features, labels, target_features, target_labels, doPredict)
+            else:
+                n_estimators = input("Please input n_estimators: ")
+                return self.randomForestClassifier(features, labels, target_features, target_labels, doPredict, n_estimators)
+
+        if algorithm is 'logistic_regression':
+            return self.LogisticRegressionClassfier(features, labels, target_features, target_labels, doPredict)
+
+        if algorithm is 'knn':
+            if default:
+                return self.KNNClassifier(features, labels, target_features, target_labels, doPredict)
+            else:
+                n_neighbors = input("Please input n_neighbors: ")
+                return self.KNNClassifier(features, labels, target_features, target_labels, doPredict, n_neighbors)
+
+        if algorithm is 'decision_tree':
+            if default:
+                return self.DecisionTreeClassifier(features, labels, target_features, target_labels, doPredict)
+            else:
+                criterion = input("Please input criterion: ")
+                random_state = input("Please input random_state: ")
+                max_depth = input("Please input max_depth: ")
+                min_samples_leaf = input("Please input min_samples_leaf: ")
+                return self.DecisionTreeClassifier(features, labels, target_features, target_labels, doPredict, \
+                                                    criterion, random_state, max_depth, min_samples_leaf)            
 
 
     def randomForestClassifier(self, features=None, labels=None, target_features=None, \
@@ -1515,10 +1539,51 @@ class ML(object):
         pred = clf.predict(target_features)
         score = metrics.accuracy_score(pred, target_labels)
         return score
-        
 
-    def randomForestCrossValidation(self, algorithm='random_forest', features=None, labels=None, \
-                                    cv=10, scoring='accuracy'):
+
+    def LogisticRegressionClassfier(self, features=None, labels=None, target_features=None, \
+                                target_labels=None, doPredict=True):
+        log_reg = LogisticRegression()
+        model = log_reg.fit(features, labels)
+
+        if not doPredict:
+            return model
+
+        pred = log_reg.predict(target_features)
+        score = metrics.accuracy_score(target_features, target_labels)
+        return score
+
+
+    def KNNClassifier(self, features=None, labels=None, target_features=None, \
+                                target_labels=None, doPredict=True, n_neighbors=10):
+        knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+        model = knn.fit(features, labels)
+
+        if not doPredict:
+            return model
+        
+        pred = knn.predict(target_features)
+        score = metrics.accuracy_score(target_features, target_labels)
+        return score
+
+
+    def DecisionTreeClassifier(self, features=None, labels=None, target_features=None, \
+                                target_labels=None, doPredict=True, criterion="entropy", \
+                                random_state=100, max_depth=3, min_samples_leaf=5):
+        clf = DecisionTreeClassifier(criterion=criterion, random_state=random_state, \
+                                    max_depth=max_depth, min_samples_leaf=min_samples_leaf)
+        model = clf.fit(features, labels)
+
+        if not doPredict:
+            return model
+
+        pred = clf.predict(target_features)
+        score = metrics.accuracy_score(pred, target_labels)
+        return score
+
+
+    def CrossValidation(self, algorithm='random_forest', features=None, labels=None, \
+                                    cv=10, scoring='accuracy', default=True):
         if features is None:
             print "You didn't indicate features to be used. Internal features \
                 will be used."
@@ -1538,8 +1603,32 @@ class ML(object):
                 labels = self.labels
 
         if algorithm is 'random_forest':
-            n_estimators = input("Please input n_estimators: ")
-            model = RandomForestClassifier(n_estimators=n_estimators)
+            if default:
+                model = RandomForestClassifier()
+            else:
+                n_estimators = input("Please input n_estimators: ")
+                model = RandomForestClassifier(n_estimators=n_estimators)
+
+        if algorithm is 'logistic_regression':
+            model = LogisticRegression()
+
+        if algorithm is 'knn':
+            if default:
+                model = KNeighborsClassifier()
+            else:
+                n_neighbors = input("Please input n_estimators: ")
+                model = KNeighborsClassifier(n_neighbors=n_neighbors)
+
+        if algorithm is 'decision_tree':
+            if default:
+                model = DecisionTreeClassifier()
+            else:
+                criterion = input("Please input criterion: ")
+                random_state = input("Please input random_state: ")
+                max_depth = input("Please input max_depth: ")
+                min_samples_leaf = input("Please input min_samples_leaf: ")
+                model = DecisionTreeClassifier(criterion=criterion, random_state=random_state, \
+                                                max_depth=max_depth, min_samples_leaf=min_samples_leaf)   
 
         cross_score = cross_val_score(model, features, labels, cv=cv, scoring=scoring)
 
