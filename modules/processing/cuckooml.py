@@ -1553,7 +1553,7 @@ class ML(object):
             return model
 
         pred = log_reg.predict(target_features)
-        score = metrics.accuracy_score(target_features, target_labels)
+        score = metrics.accuracy_score(pred, target_labels)
         return score
 
 
@@ -1567,7 +1567,7 @@ class ML(object):
             return model
         
         pred = knn.predict(target_features)
-        score = metrics.accuracy_score(target_features, target_labels)
+        score = metrics.accuracy_score(pred, target_labels)
         return score
 
 
