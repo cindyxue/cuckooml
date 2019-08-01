@@ -1459,6 +1459,7 @@ class ML(object):
 
     # ******************** Supervised ML Model ********************
 
+    # A driver function for Machine learning classifiers
     def MLClassifier(self, algorithm='random_forest', features=None, labels=None, target_features=None, \
                         target_labels=None, doPredict=True, default=True):
         if features is None:
@@ -1527,6 +1528,7 @@ class ML(object):
                                                     criterion, random_state, max_depth, min_samples_leaf)            
 
 
+    # Classifer using random forest model
     def randomForestClassifier(self, features=None, labels=None, target_features=None, \
                                 target_labels=None, doPredict=True, n_estimators=5):
 
@@ -1541,6 +1543,7 @@ class ML(object):
         return score
 
 
+    # Classifer using logistic regression model
     def LogisticRegressionClassfier(self, features=None, labels=None, target_features=None, \
                                 target_labels=None, doPredict=True):
         log_reg = LogisticRegression()
@@ -1554,6 +1557,7 @@ class ML(object):
         return score
 
 
+    # Classifer using KNN model
     def KNNClassifier(self, features=None, labels=None, target_features=None, \
                                 target_labels=None, doPredict=True, n_neighbors=10):
         knn = KNeighborsClassifier(n_neighbors=n_neighbors)
@@ -1567,6 +1571,7 @@ class ML(object):
         return score
 
 
+    # Classifer using decision tree model
     def DecisionTreeClassifier(self, features=None, labels=None, target_features=None, \
                                 target_labels=None, doPredict=True, criterion="entropy", \
                                 random_state=100, max_depth=3, min_samples_leaf=5):
@@ -1582,6 +1587,7 @@ class ML(object):
         return score
 
 
+    # Cross Validation using different models
     def CrossValidation(self, algorithm='random_forest', features=None, labels=None, \
                                     cv=10, scoring='accuracy', default=True):
         if features is None:
