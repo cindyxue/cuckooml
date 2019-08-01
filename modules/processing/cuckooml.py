@@ -1501,10 +1501,10 @@ class ML(object):
 
         if algorithm is 'random_forest':
             if default:
-                return self.randomForestClassifier(features, labels, target_features, target_labels, doPredict)
+                return self.RandomForestClassifier(features, labels, target_features, target_labels, doPredict)
             else:
                 n_estimators = input("Please input n_estimators: ")
-                return self.randomForestClassifier(features, labels, target_features, target_labels, doPredict, n_estimators)
+                return self.RandomForestClassifier(features, labels, target_features, target_labels, doPredict, n_estimators)
 
         if algorithm is 'logistic_regression':
             return self.LogisticRegressionClassfier(features, labels, target_features, target_labels, doPredict)
@@ -1529,7 +1529,7 @@ class ML(object):
 
 
     # Classifer using random forest model
-    def randomForestClassifier(self, features=None, labels=None, target_features=None, \
+    def RandomForestClassifier(self, features=None, labels=None, target_features=None, \
                                 target_labels=None, doPredict=True, n_estimators=5):
 
         clf = RandomForestClassifier(n_estimators=n_estimators)
@@ -1639,6 +1639,35 @@ class ML(object):
         cross_score = cross_val_score(model, features, labels, cv=cv, scoring=scoring)
 
         return cross_score.mean()
+
+
+    def RandomForestFeatureImportance(self, features=None, labels=None, n_estimators=5, \
+                                        doPrint=False):
+        col_index_array = features.columns.values
+        clf = RandomForestClassifier(n_estimators=n_estimators)
+        clf.fit(features, labels)
+        feature_dict = {}
+
+        importances = clf.feature_importances_
+        std = np.std([tree.feature_importances_ for tree in clf.estimators_], 
+                        axis=0)
+        indices = np.argsort(importances)[::-1]
+
+        if doPrint:
+            print("Feature ranking:")
+            for f in range(simple_features.shape[1]):
+                cur_ind = indices[f]
+                print("%d. feature: %s (%f)" % (f + 1, col_index_array[cur_ind], importances[cur_ind]))
+
+        for f in range(simple_features.shape[1]):
+            cur_ind = indices[f]
+            key = col_index_array[cur_ind]
+            feature_dict[key] = importances[cur_ind]
+
+        return feature_dict    
+
+
+
 
 
 class Loader(object):
