@@ -1655,11 +1655,11 @@ class ML(object):
 
         if doPrint:
             print("Feature ranking:")
-            for f in range(simple_features.shape[1]):
+            for f in range(features.shape[1]):
                 cur_ind = indices[f]
                 print("%d. feature: %s (%f)" % (f + 1, col_index_array[cur_ind], importances[cur_ind]))
 
-        for f in range(simple_features.shape[1]):
+        for f in range(features.shape[1]):
             cur_ind = indices[f]
             key = col_index_array[cur_ind]
             feature_dict[key] = importances[cur_ind]
