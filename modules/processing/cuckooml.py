@@ -1622,7 +1622,7 @@ class ML(object):
             if default:
                 model = KNeighborsClassifier()
             else:
-                n_neighbors = input("Please input n_estimators: ")
+                n_neighbors = input("Please input n_neighbors: ")
                 model = KNeighborsClassifier(n_neighbors=n_neighbors)
 
         if algorithm is 'decision_tree':
@@ -1641,6 +1641,7 @@ class ML(object):
         return cross_score.mean()
 
 
+    # List the importance of each feature to the machine learning model
     def RandomForestFeatureImportance(self, features=None, labels=None, n_estimators=5, \
                                         doPrint=False):
         col_index_array = features.columns.values
@@ -1667,8 +1668,6 @@ class ML(object):
         sorted_dict = sorted(feature_dict.items(), key=operator.itemgetter(1), reverse=True)
 
         return sorted_dict    
-
-
 
 
 
